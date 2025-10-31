@@ -1,15 +1,17 @@
 services:
   psql:
     container_name: psql
-    image: postgres:16
+    image: postgres
     environment:
-      POSTGRES_DB: "postgres"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "root"
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      PGDATA: /data/postgres
+      POSTGRES_DB: products
+    volumes:
+      - postgres:/data/postgres
     ports:
       - "5432:5432"
-    volumes:
-      - ./psql:/var/lib/postgresql/data
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus
@@ -35,4 +37,4 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock"
 
 volumes:
-  psql:
+  postgres:
