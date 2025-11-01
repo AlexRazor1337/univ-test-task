@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { createDrizzleClient } from '@app/libs/db/db.utils';
@@ -17,8 +17,11 @@ export class ProductsRepository {
     offset: number,
   ): Promise<[Product[], number]> {
     const [totalResult] = await this.db
-      .select({ count: productsTable.id })
+      .select({
+        count: sql<number>`count(*)`,
+      })
       .from(productsTable);
+
     const items = await this.db
       .select()
       .from(productsTable)

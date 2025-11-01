@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Patch,
   Post,
@@ -21,6 +22,7 @@ import {
 import { ProductDto } from './dto/product.dto';
 import { PaginatedProductsDto } from './dto/paginated-products.dto';
 import { GetProductsQueryDto } from './dto/get-products.dto';
+import { StatusCodes } from 'http-status-codes';
 
 @Controller('products')
 export class ProductsController {
@@ -65,6 +67,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @HttpCode(StatusCodes.NO_CONTENT)
   @ApiNoContentResponse({ description: 'Product deleted successfully' })
   @ApiNotFoundResponse({ description: 'Product not found' })
   remove(@Param('id') id: number): Promise<void> {

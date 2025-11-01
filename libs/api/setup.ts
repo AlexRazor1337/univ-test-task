@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import validationPipeConfig from '../config/validation-pipe.config';
 import { ConfigService } from '@nestjs/config';
 
+// TODO: Add api description
 export function setup(app: INestApplication<any>, apiName: string): void {
   if (process.env.NODE_ENV === 'development') {
     const config = new DocumentBuilder().setTitle(apiName).build();
