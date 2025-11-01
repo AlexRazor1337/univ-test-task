@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
-import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { createDrizzleClient } from '@app/libs/db/db.utils';
 import { Product, productsTable } from '@app/libs/db/schema/products';
 
@@ -12,8 +12,19 @@ export class ProductsRepository {
     private readonly db: ReturnType<typeof createDrizzleClient>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return this.db.select().from(productsTable);
+  async getPaginated(
+    limit: number,
+    offset: number,
+  ): Promise<[Product[], number]> {
+    const [totalResult] = await this.db
+      .select({ count: productsTable.id })
+      .from(productsTable);
+    const items = await this.db
+      .select()
+      .from(productsTable)
+      .limit(limit)
+      .offset(offset);
+    return [items, Number(totalResult.count)];
   }
 
   async findById(id: number): Promise<Product | undefined> {

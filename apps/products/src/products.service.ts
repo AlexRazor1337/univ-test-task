@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
-import { CreateProductDto } from '../dto/create-product.dto';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from '@app/libs/db/schema/products';
+import { GetProductsQueryDto } from './dto/get-products.dto';
+import { PaginatedProductsDto } from './dto/paginated-products.dto';
 
 @Injectable()
 export class ProductsService {
@@ -12,8 +14,19 @@ export class ProductsService {
     return this.productsRepository.create(dto);
   }
 
-  findAll(): Promise<Product[]> {
-    return this.productsRepository.findAll();
+  async getAllPaginated(
+    query: GetProductsQueryDto,
+  ): Promise<PaginatedProductsDto> {
+    const { limit = 10, offset = 0 } = query;
+    const [items, total] = await this.productsRepository.getPaginated(
+      limit,
+      offset,
+    );
+
+    return {
+      total,
+      items,
+    };
   }
 
   findOne(id: number): Promise<Product> {
