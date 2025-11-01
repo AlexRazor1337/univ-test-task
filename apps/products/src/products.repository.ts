@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
+import { buildInsertQuery, createDrizzleClient } from '@app/libs/db/db.utils';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { createDrizzleClient } from '@app/libs/db/db.utils';
 import { Product, productsTable } from '@app/libs/db/schema/products';
 
 @Injectable()
@@ -16,46 +15,36 @@ export class ProductsRepository {
     limit: number,
     offset: number,
   ): Promise<{ items: Product[]; total: number }> {
-    const [totalResult] = await this.db
-      .select({
-        count: sql<number>`count(*)`,
-      })
-      .from(productsTable);
+    const {
+      rows: [{ count: total }],
+    } = await this.db.execute(sql`SELECT COUNT(*)::int AS count FROM products`);
 
-    const items = await this.db
-      .select()
-      .from(productsTable)
-      .limit(limit)
-      .offset(offset);
-    return { items, total: Number(totalResult.count) };
+    const { rows: items } = await this.db.execute<Product>(
+      sql`SELECT * FROM products ORDER BY id LIMIT ${limit} OFFSET ${offset}`,
+    );
+
+    return { items, total: total as number };
   }
 
   async findById(id: number): Promise<Product | undefined> {
-    const [result] = await this.db
-      .select()
-      .from(productsTable)
-      .where(eq(productsTable.id, id));
+    const {
+      rows: [result],
+    } = await this.db.execute<Product>(
+      sql`SELECT * FROM products WHERE id = ${id} LIMIT 1`,
+    );
+
     return result;
   }
 
   async create(data: CreateProductDto): Promise<Product> {
-    const [inserted] = await this.db
-      .insert(productsTable)
-      .values(data)
-      .returning();
-    return inserted;
-  }
-
-  async update(id: number, data: UpdateProductDto): Promise<Product> {
-    const [updated] = await this.db
-      .update(productsTable)
-      .set(data)
-      .where(eq(productsTable.id, id))
-      .returning();
-    return updated;
+    const query = buildInsertQuery(productsTable, data);
+    const {
+      rows: [product],
+    } = await this.db.execute<Product>(query);
+    return product;
   }
 
   async delete(id: number): Promise<void> {
-    await this.db.delete(productsTable).where(eq(productsTable.id, id));
+    await this.db.execute(sql`DELETE FROM products WHERE id = ${id}`);
   }
 }

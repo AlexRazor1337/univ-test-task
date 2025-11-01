@@ -5,14 +5,12 @@ import {
   Get,
   HttpCode,
   Param,
-  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from '@app/libs/db/schema/products';
-import { UpdateProductDto } from './dto/update-product.dto';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -42,7 +40,7 @@ export class ProductsController {
     type: PaginatedProductsDto,
     description: 'Paginated list of products',
   })
-  findAll(@Query() query: GetProductsQueryDto): Promise<PaginatedProductsDto> {
+  getAll(@Query() query: GetProductsQueryDto): Promise<PaginatedProductsDto> {
     return this.productsService.getAllPaginated(query);
   }
 
@@ -51,19 +49,6 @@ export class ProductsController {
   @ApiNotFoundResponse({ description: 'Product not found' })
   async findOne(@Param('id') id: number): Promise<Product> {
     return this.productsService.findOne(id);
-  }
-
-  @Patch(':id')
-  @ApiOkResponse({
-    type: ProductDto,
-    description: 'Product updated successfully',
-  })
-  @ApiNotFoundResponse({ description: 'Product not found' })
-  update(
-    @Param('id') id: number,
-    @Body() dto: UpdateProductDto,
-  ): Promise<Product> {
-    return this.productsService.update(id, dto);
   }
 
   @Delete(':id')

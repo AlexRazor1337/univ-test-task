@@ -4,6 +4,7 @@ import { ProductsService } from './products.service';
 import { ConfigModule } from '@nestjs/config';
 import { ProductsRepository } from './products.repository';
 import { dbProvider } from '@app/libs/db/db.provider';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
