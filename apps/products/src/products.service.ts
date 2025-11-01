@@ -4,13 +4,19 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { Product } from '@app/libs/db/schema/products';
 import { GetProductsQueryDto } from './dto/get-products.dto';
 import { PaginatedProductsDto } from './dto/paginated-products.dto';
+import { deleteProductCounter } from './metrics/delete-product.counter';
+import { createProductCounter } from './metrics/create-product.counter';
 
 @Injectable()
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) {}
 
-  create(dto: CreateProductDto): Promise<Product> {
-    return this.productsRepository.create(dto);
+  async create(dto: CreateProductDto): Promise<Product> {
+    const product = await this.productsRepository.create(dto);
+
+    createProductCounter.inc();
+
+    return product;
   }
 
   async getAllPaginated(
@@ -32,6 +38,7 @@ export class ProductsService {
 
   async delete(id: number): Promise<void> {
     await this.findOne(id);
-    return this.productsRepository.delete(id);
+    await this.productsRepository.delete(id);
+    deleteProductCounter.inc();
   }
 }
