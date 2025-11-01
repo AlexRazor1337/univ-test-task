@@ -6,16 +6,23 @@ import { GetProductsQueryDto } from './dto/get-products.dto';
 import { PaginatedProductsDto } from './dto/paginated-products.dto';
 import { deleteProductCounter } from './metrics/delete-product.counter';
 import { createProductCounter } from './metrics/create-product.counter';
+import { SqsEmitterService } from '@app/libs/sqs/sqs-emitter.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly productsRepository: ProductsRepository) {}
+  constructor(
+    private readonly productsRepository: ProductsRepository,
+    private readonly sqsEmitterService: SqsEmitterService,
+  ) {}
 
   async create(dto: CreateProductDto): Promise<Product> {
     const product = await this.productsRepository.create(dto);
 
     createProductCounter.inc();
-
+    await this.sqsEmitterService.sendMessage({
+      event: 'PRODUCT_CREATED',
+      product,
+    });
     return product;
   }
 

@@ -6,6 +6,7 @@ import { ProductsRepository } from './products.repository';
 import { dbProvider } from '@app/libs/db/db.provider';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
 import prometheusConfig from '@app/libs/config/prometheus.config';
+import { SqsEmitterService } from '@app/libs/sqs/sqs-emitter.service';
 
 @Module({
   imports: [
@@ -17,6 +18,11 @@ import prometheusConfig from '@app/libs/config/prometheus.config';
     }),
   ],
   controllers: [ProductsController],
-  providers: [ProductsService, dbProvider, ProductsRepository],
+  providers: [
+    ProductsService,
+    dbProvider,
+    ProductsRepository,
+    SqsEmitterService,
+  ],
 })
 export class ProductsModule {}

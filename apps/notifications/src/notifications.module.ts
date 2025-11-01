@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { NotificationsController } from './notifications.controller';
 import { NotificationsService } from './notifications.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SqsListenerService } from '@app/libs/sqs/sqs-listener.service';
 
 @Module({
   imports: [
@@ -9,7 +9,19 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: './apps/notifications/.env',
     }),
   ],
-  controllers: [NotificationsController],
-  providers: [NotificationsService],
+  controllers: [],
+  providers: [
+    NotificationsService,
+    {
+      provide: SqsListenerService,
+      useFactory: (
+        configService: ConfigService,
+        notificationsService: NotificationsService,
+      ) => {
+        return new SqsListenerService(configService, [notificationsService]);
+      },
+      inject: [ConfigService, NotificationsService],
+    },
+  ],
 })
 export class NotificationsModule {}
