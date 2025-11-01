@@ -7,6 +7,7 @@ import { PaginatedProductsDto } from './dto/paginated-products.dto';
 import { deleteProductCounter } from './metrics/delete-product.counter';
 import { createProductCounter } from './metrics/create-product.counter';
 import { SqsEmitterService } from '@app/libs/sqs/sqs-emitter.service';
+import { ProductEvents } from '@app/libs/sqs/products.events';
 
 @Injectable()
 export class ProductsService {
@@ -20,9 +21,10 @@ export class ProductsService {
 
     createProductCounter.inc();
     await this.sqsEmitterService.sendMessage({
-      event: 'PRODUCT_CREATED',
-      product,
+      event: ProductEvents.PRODUCT_CREATED,
+      product: { id: product.id, name: product.name },
     });
+
     return product;
   }
 
@@ -44,8 +46,13 @@ export class ProductsService {
   }
 
   async delete(id: number): Promise<void> {
-    await this.findOne(id);
+    const product = await this.findOne(id);
     await this.productsRepository.delete(id);
+
     deleteProductCounter.inc();
+    await this.sqsEmitterService.sendMessage({
+      event: ProductEvents.PRODUCT_DELETED,
+      product: { id: product.id, name: product.name },
+    });
   }
 }

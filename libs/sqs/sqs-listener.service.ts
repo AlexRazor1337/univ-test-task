@@ -13,7 +13,7 @@ export class SqsListenerService implements OnModuleInit {
 
   constructor(
     private configService: ConfigService,
-    private handlerInstances: any[], // injected list of classes with @SqsMessageHandler
+    private handlerInstances: any[],
   ) {
     this.sqsClient = new SQSClient({
       region: this.configService.get<string>('AWS_REGION'),
@@ -27,6 +27,7 @@ export class SqsListenerService implements OnModuleInit {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private handlers: Record<string, Function[]> = {};
 
   onModuleInit() {
@@ -77,7 +78,7 @@ export class SqsListenerService implements OnModuleInit {
               try {
                 await handler(body);
               } catch (err) {
-                // TODO: Error handling
+                // TODO: Error handling?
                 // No retry mechanism here
               }
             }
