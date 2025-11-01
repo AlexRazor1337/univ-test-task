@@ -15,7 +15,7 @@ export class ProductsRepository {
   async getPaginated(
     limit: number,
     offset: number,
-  ): Promise<[Product[], number]> {
+  ): Promise<{ items: Product[]; total: number }> {
     const [totalResult] = await this.db
       .select({
         count: sql<number>`count(*)`,
@@ -27,7 +27,7 @@ export class ProductsRepository {
       .from(productsTable)
       .limit(limit)
       .offset(offset);
-    return [items, Number(totalResult.count)];
+    return { items, total: Number(totalResult.count) };
   }
 
   async findById(id: number): Promise<Product | undefined> {

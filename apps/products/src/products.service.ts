@@ -18,15 +18,7 @@ export class ProductsService {
     query: GetProductsQueryDto,
   ): Promise<PaginatedProductsDto> {
     const { limit = 10, offset = 0 } = query;
-    const [items, total] = await this.productsRepository.getPaginated(
-      limit,
-      offset,
-    );
-
-    return {
-      total,
-      items,
-    };
+    return this.productsRepository.getPaginated(limit, offset);
   }
 
   async findOne(id: number): Promise<Product> {
