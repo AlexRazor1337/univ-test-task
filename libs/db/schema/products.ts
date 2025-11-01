@@ -6,9 +6,9 @@ import {
   timestamp,
   text,
 } from 'drizzle-orm/pg-core';
-import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import { InferSelectModel } from 'drizzle-orm';
 
-export const products = pgTable('products', {
+export const productsTable = pgTable('products', {
   id: serial('id').primaryKey(),
   name: varchar('name', { length: 255 }).notNull(),
   description: text('description'),
@@ -16,5 +16,4 @@ export const products = pgTable('products', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-export type Product = InferSelectModel<typeof products>;
-export type NewProduct = InferInsertModel<typeof products>;
+export type Product = InferSelectModel<typeof productsTable>;
