@@ -19,7 +19,7 @@ export function getAppPort(app: INestApplication<any>): number {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT');
 
-  if (port) {
+  if (!port) {
     throw new Error('PORT environment variable is not set');
   }
 

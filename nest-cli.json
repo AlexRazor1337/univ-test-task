@@ -16,7 +16,10 @@
       "entryFile": "main",
       "sourceRoot": "apps/products/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/products/tsconfig.app.json"
+        "tsConfigPath": "apps/products/tsconfig.app.json",
+        "assets": [
+          { "include": "../.env", "outDir": "./dist/apps/products/.env" }
+        ]
       }
     },
     "notifications": {
@@ -25,7 +28,10 @@
       "entryFile": "main",
       "sourceRoot": "apps/notifications/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/notifications/tsconfig.app.json"
+        "tsConfigPath": "apps/notifications/tsconfig.app.json",
+        "assets": [
+          { "include": "../.env", "outDir": "./dist/apps/notifications/.env" }
+        ]
       }
     }
   }

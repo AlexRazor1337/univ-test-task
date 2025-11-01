@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      envFilePath: './apps/products/.env',
     }),
   ],
   controllers: [ProductsController],
