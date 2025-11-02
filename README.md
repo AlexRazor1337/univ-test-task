@@ -72,6 +72,9 @@ There you can access Node.js metrics like used memory, total HTTP requests (`htt
 
 ## Testing
 To run the tests, use the following command:
+```
+npm run test
+```
 
 ## Generate a migration
 To generate a migration, run drizzle kit with respective service config file:

@@ -69,6 +69,17 @@ describe('ProductsService', () => {
       });
       expect(result).toEqual(mockProduct);
     });
+
+    it('should throw if SQS sendMessage fails after creation', async () => {
+      repo.create.mockResolvedValue(mockProduct);
+      sqs.sendMessage.mockRejectedValue(new Error('SQS down'));
+
+      await expect(
+        service.create({ name: 'Broken Event' } as any),
+      ).rejects.toThrow('SQS down');
+
+      expect(createProductCounter.inc).toHaveBeenCalled();
+    });
   });
 
   describe('getAllPaginated', () => {
@@ -79,6 +90,14 @@ describe('ProductsService', () => {
 
       expect(repo.getPaginated).toHaveBeenCalledWith(10, 0);
       expect(result).toEqual(mockPaginated);
+    });
+
+    it('should apply default pagination values when none provided', async () => {
+      repo.getPaginated.mockResolvedValue(mockPaginated);
+
+      await service.getAllPaginated({} as any);
+
+      expect(repo.getPaginated).toHaveBeenCalledWith(10, 0);
     });
   });
 
@@ -121,6 +140,17 @@ describe('ProductsService', () => {
       await expect(service.delete(123)).rejects.toThrow(NotFoundException);
       expect(repo.delete).not.toHaveBeenCalled();
       expect(deleteProductCounter.inc).not.toHaveBeenCalled();
+    });
+
+    it('should propagate repository errors during deletion', async () => {
+      repo.findById.mockResolvedValue(mockProduct);
+      const error = new Error('Delete failed');
+      repo.delete.mockRejectedValue(error);
+
+      await expect(service.delete(1)).rejects.toThrow(error);
+
+      expect(deleteProductCounter.inc).not.toHaveBeenCalled();
+      expect(sqs.sendMessage).not.toHaveBeenCalled();
     });
   });
 });
