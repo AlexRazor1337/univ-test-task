@@ -1,5 +1,5 @@
-import { ProductEvents } from '@app/libs/sqs/products.events';
-import { SqsMessageHandler } from '@app/libs/sqs/sqs-message-handler.decorator';
+import { ProductEvents } from '@app/lib/sqs/products.events';
+import { SqsMessageHandler } from '@app/lib/sqs/sqs-message-handler.decorator';
 import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()

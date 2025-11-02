@@ -3,10 +3,10 @@ import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
 import { ConfigModule } from '@nestjs/config';
 import { ProductsRepository } from './products.repository';
-import { dbProvider } from '@app/libs/db/db.provider';
+import { dbProvider } from '@app/lib/db/db.provider';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
-import prometheusConfig from '@app/libs/config/prometheus.config';
-import { SqsEmitterService } from '@app/libs/sqs/sqs-emitter.service';
+import prometheusConfig from '@app/lib/config/prometheus.config';
+import { SqsEmitterService } from '@app/lib/sqs/sqs-emitter.service';
 
 @Module({
   imports: [
@@ -19,8 +19,8 @@ import { SqsEmitterService } from '@app/libs/sqs/sqs-emitter.service';
   ],
   controllers: [ProductsController],
   providers: [
-    ProductsService,
     dbProvider,
+    ProductsService,
     ProductsRepository,
     SqsEmitterService,
   ],

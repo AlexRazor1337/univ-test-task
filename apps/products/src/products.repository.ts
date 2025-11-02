@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { sql } from 'drizzle-orm';
-import { buildInsertQuery, createDrizzleClient } from '@app/libs/db/db.utils';
+import { buildInsertQuery, createDrizzleClient } from '@app/lib/db/db.utils';
 import { CreateProductDto } from './dto/create-product.dto';
-import { Product, productsTable } from '@app/libs/db/schema/products';
+import { Product, productsTable } from '@app/lib/db/schema/products';
 
 @Injectable()
 export class ProductsRepository {

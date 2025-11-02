@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SqsListenerService } from '@app/libs/sqs/sqs-listener.service';
+import { SqsListenerService } from '@app/lib/sqs/sqs-listener.service';
 
 @Module({
   imports: [
