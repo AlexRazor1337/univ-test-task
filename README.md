@@ -71,9 +71,13 @@ Local Prometheus from Docker could be found at `http://localhost:9090`.
 There you can access Node.js metrics like used memory, total HTTP requests (`http_requests_total`), and products metrics (`products_created_total`, `products_deleted_total`).
 
 ## Testing
-To run the tests, use the following command:
+To run the unit tests, use the following command:
 ```
 npm run test
+```
+For e2e testing, run
+```
+npm run test:e2e
 ```
 
 ## Generate a migration
