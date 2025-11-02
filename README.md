@@ -79,6 +79,7 @@ For e2e testing, run
 ```
 npm run test:e2e
 ```
+Tests are also automatically run on Github Actions on each commit to main and development branches.
 
 ## Generate a migration
 To generate a migration, run drizzle kit with respective service config file:
