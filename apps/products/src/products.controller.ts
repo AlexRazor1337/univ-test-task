@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
-import { Product } from '@app/lib/db/schema/products';
+import { Product } from '@app/libs/db/schema/products';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,

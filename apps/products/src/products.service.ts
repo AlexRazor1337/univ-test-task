@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Product } from '@app/lib/db/schema/products';
-import { SqsEmitterService } from '@app/lib/sqs/sqs-emitter.service';
-import { ProductEvents } from '@app/lib/sqs/products.events';
+import { Product } from '@app/libs/db/schema/products';
+import { SqsEmitterService } from '@app/libs/sqs/sqs-emitter.service';
+import { ProductEvents } from '@app/libs/sqs/products.events';
 import { ProductsRepository } from './products.repository';
 import { CreateProductDto } from './dto/create-product.dto';
 import { GetProductsQueryDto } from './dto/get-products.dto';

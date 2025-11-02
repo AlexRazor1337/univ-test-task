@@ -71,6 +71,9 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^@app/(.*)$": "<rootDir>/$1"
+    },
     "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
