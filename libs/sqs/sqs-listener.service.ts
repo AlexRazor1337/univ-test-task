@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   SQSClient,
@@ -10,6 +10,7 @@ import { SQS_MESSAGE_HANDLER_METADATA } from './sqs-message-handler.decorator';
 @Injectable()
 export class SqsListenerService implements OnModuleInit {
   private sqsClient: SQSClient;
+  private readonly logger = new Logger(SqsListenerService.name);
 
   constructor(
     private configService: ConfigService,
@@ -78,8 +79,8 @@ export class SqsListenerService implements OnModuleInit {
               try {
                 await handler(body);
               } catch (err) {
-                // TODO: Error handling?
                 // No retry mechanism here
+                this.logger.error(err);
               }
             }
 
